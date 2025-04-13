@@ -23,6 +23,10 @@
                     <button @click="disconnectAllDevices" class="btn-red">Disconnect</button>
                 </div>
 
+                <div class="flex flex-wrap gap-2">
+                    <button @click="test" class="btn-primary">test</button>
+                </div>
+
                 <!-- Connected Devices List -->
                 <div class="mt-4">
                     <h3 class="font-semibold text-gray-700">Connected Devices</h3>
@@ -39,9 +43,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import createSynchronizer from '../lib/synchronizer.js'
+import { loadThing } from '../lib/loadThing.js'
 
+let machine = null
 const connectedLinks = ref([])
 const isOpen = ref(true)
+const motorA = ref(null)
+const motorB = ref(null)
 
 function cobsEncode(buf) {
     const dest = [0]
@@ -109,7 +118,16 @@ class COBSWebSerial {
     }
 
     async setupPort(port) {
-        await port.open({ baudRate: 9600 })
+        // await port.open({ baudRate: 9600 })
+        try {
+            if (!port.readable && !port.writable) {
+                await port.open({ baudRate: 9600 });
+            }
+        } catch (err) {
+            // console.error("🚫 Failed to open port:", err);
+            // alert("ポートがすでに開いている、または他のアプリで使用中です。");
+            // return;
+        }
         let writer = null
         let reader = null
 
@@ -180,7 +198,17 @@ class COBSWebSerial {
     }
 
     async authorizeNewPort() {
-        const port = await navigator.serial.requestPort()
+        let port
+        try {
+            port = await navigator.serial.requestPort()
+        } catch (err) {
+            if (err.name === 'NotFoundError') {
+                console.warn('⛔ ポート選択がキャンセルされました')
+                return
+            }
+            console.error('シリアルポートの取得に失敗:', err)
+            return
+        }
         return await this.setupPort(port)
     }
 
@@ -211,11 +239,81 @@ onMounted(() => {
     serial.init()
 })
 
-const pairDevice = () => serial.authorizeNewPort()
+// const pairDevice = () => serial.authorizeNewPort()
+const pairDevice = async () => {
+    const link = await serial.authorizeNewPort()
+    if (!link) return
+
+    const device = await loadThing(link)
+    if (!device) return
+
+    console.log('🔌 Paired device:', device.name)
+
+    if (device.name === 'motorA') {
+        motorA.value = device
+        console.log('✅ motorA 接続完了')
+    } else if (device.name === 'motorB') {
+        motorB.value = device
+        console.log('✅ motorB 接続完了')
+    } else {
+        console.warn(`⚠️ Unknown device name: ${device.name}`)
+    }
+}
+
+const test = async () => {
+    // const link = await serial.authorizeNewPort()
+    const link = await navigator.serial.getPorts()
+    // for (const port of ports) {
+    //     if (this.openLinks.find(link => link.underlyingPort === port)) continue
+    //     await this.setupPort(port)
+    // }
+    if (!link) return
+
+    const device = await loadThing(link)
+    if (!device) return
+
+    console.log('🔌 Paired device:', device.name)
+
+    if (device.name === 'motorA') {
+        motorA.value = device
+        console.log('✅ motorA 接続完了')
+    } else if (device.name === 'motorB') {
+        motorB.value = device
+        console.log('✅ motorB 接続完了')
+    } else {
+        console.warn(`⚠️ Unknown device name: ${device.name}`)
+    }
+
+    if (!motorA.value) {
+        console.warn("motorA is not connected.")
+        return
+    }
+
+    try {
+        // 現在位置を取得
+        const currentPos = await motorA.value.getPosition()
+        console.log("Current position:", currentPos)
+
+        // 10単位進める
+        const newPos = [currentPos[0] + 10]
+        await motorA.value.setPosition(newPos)
+        console.log("Moved to:", newPos)
+
+        // 動作が終了するのを待つ
+        await motorA.value.awaitMotionEnd()
+        console.log("Motion complete")
+
+        // 最終位置確認
+        const updatedPos = await motorA.value.getPosition()
+        console.log("Updated position:", updatedPos)
+    } catch (err) {
+        console.error("Error in test:", err)
+    }
+}
+
 const disconnectAllDevices = () => serial.disconnectAll()
 const scanDevices = async () => {
     const ports = await navigator.serial.getPorts()
-    alert(`${ports.length} port(s) found`)
     console.log('Available ports:', ports)
 }
 </script>
