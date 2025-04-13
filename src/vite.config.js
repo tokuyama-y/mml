@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite'
+import autoprefixer from 'autoprefixer'
 
 export default defineConfig({
     resolve: {
@@ -16,6 +17,7 @@ export default defineConfig({
         }),
         vue(),
         tailwindcss(),
+        autoprefixer(),
     ],
     server: {
         host: 'localhost',

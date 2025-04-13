@@ -10,6 +10,7 @@
     <div class="pt-4">
         <image-uploader></image-uploader>
     </div>
+    <device-scanner></device-scanner>
 </div>
 </body>
 </html>
