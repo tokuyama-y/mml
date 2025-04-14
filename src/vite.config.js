@@ -1,13 +1,13 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import laravel from 'laravel-vite-plugin';
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import laravel from 'laravel-vite-plugin'
+import tailwindcss from '@tailwindcss/postcss'
 import autoprefixer from 'autoprefixer'
 
 export default defineConfig({
     resolve: {
         alias: {
-            vue: 'vue/dist/vue.esm-bundler.js', // ★ これがポイント！
+            vue: 'vue/dist/vue.esm-bundler.js',
         },
     },
     plugins: [
@@ -16,11 +16,17 @@ export default defineConfig({
             refresh: true,
         }),
         vue(),
-        tailwindcss(),
-        autoprefixer(),
     ],
-    server: {
-        host: 'localhost',
-        port: 5174,
+    css: {
+        postcss: {
+            plugins: [
+                tailwindcss,
+                autoprefixer,
+            ],
+        },
     },
-});
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+    },
+})

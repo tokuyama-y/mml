@@ -1,0 +1,60 @@
+version: '3.8'
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./src:/var/www/html
+    networks:
+      - mml-network
+    depends_on:
+      - php
+
+  php:
+    container_name: php
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - mml-network
+
+  node:
+    image: node:18
+    container_name: node
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - mml-network
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev"
+
+  db:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: mml
+      MYSQL_USER: mml_user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root_pass
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - mml-network
+    command: --default-authentication-plugin=mysql_native_password
+
+networks:
+  mml-network:
+    name: mml-network
+    driver: bridge
+
+volumes:
+  db-data:

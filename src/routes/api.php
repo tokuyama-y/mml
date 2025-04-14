@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ImageUploadController;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +19,13 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::post('/upload', function (\Illuminate\Http\Request $request) {
-    if ($request->hasFile('image')) {
-        $path = $request->file('image')->store('uploads', 'public');
-        return response()->json(['path' => asset('storage/' . $path)]);
-    }
-    return response()->json(['error' => 'No image uploaded'], 400);
+Route::post('/upload-image', [ImageUploadController::class, 'upload']);
+
+Route::get('/debug-s3', function () {
+    return [
+        'env_endpoint' => env('AWS_ENDPOINT'),
+        'config_endpoint' => config('filesystems.disks.s3.endpoint'),
+        'bucket' => config('filesystems.disks.s3.bucket'),
+        'can_write' => Storage::disk('s3')->put('debug.json', '{"test": "ok"}'),
+    ];
 });
