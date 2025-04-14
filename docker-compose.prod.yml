@@ -8,6 +8,7 @@ services:
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./src:/var/www/html
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - mml-network
     depends_on:
@@ -24,16 +25,14 @@ services:
       - mml-network
 
   node:
-    image: node:18
-    container_name: node
-    working_dir: /var/www/html
-    volumes:
-      - ./src:/var/www/html
-    networks:
-      - mml-network
-    ports:
-      - "5173:5173"
-    command: sh -c "npm install && npm run dev"
+      image: node:18
+      container_name: node
+      working_dir: /var/www/html
+      volumes:
+        - ./src:/var/www/html
+      networks:
+        - mml-network
+      command: sh -c "npm install && npm run build"
 
   db:
     image: mysql:8.0

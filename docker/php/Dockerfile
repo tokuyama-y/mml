@@ -9,13 +9,16 @@ RUN apt-get update && apt-get install -y \
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
-# Composerを multi-stage build でコピー（これは RUN に含めない！）
+# Composerを multi-stage build でコピー
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # 作業ディレクトリとコード配置
 WORKDIR /var/www/html
 COPY ./src/ .
 
-# Laravel 初期処理
-RUN composer install \
-    && php artisan config:clear
+# Entrypointスクリプトを追加
+COPY docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Entrypointを設定
+ENTRYPOINT ["entrypoint.sh"]
