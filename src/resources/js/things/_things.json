@@ -1,0 +1,150 @@
+[
+  {
+    "author": "Quentin Bolsee",
+    "name": "accel-LSM6DSO-xiao",
+    "software": "software/accelerometer.ts",
+    "firmware": "firmware/accelerometer-xiao/accelerometer-xiao.ino",
+    "images": [
+      { 
+        "name": "layout", 
+        "src": "circuit/images/layout.png"
+      },
+      { 
+        "name": "schematic", 
+        "src": "circuit/images/schematic.png"
+      },
+      { 
+        "name": "preview", 
+        "src": "circuit/images/preview.png"
+      }
+    ]
+  },
+  {
+    "author": "Quentin Bolsee",
+    "name": "button-xiao",
+    "software": "software/button.ts",
+    "firmware": "firmware/button-xiao/button-xiao.ino",
+    "images": [
+      { 
+        "name": "layout", 
+        "src": "circuit/images/layout.png"
+      },
+      { 
+        "name": "schematic", 
+        "src": "circuit/images/schematic.png"
+      },
+      { 
+        "name": "preview", 
+        "src": "circuit/images/preview.png"
+      }
+    ]
+  },
+  {
+    "author": "Quentin Bolsee",
+    "name": "display-OLED-xiao",
+    "software": "software/display.js",
+    "firmware": "firmware/display-xiao/display-xiao.ino",
+    "images": [
+      { 
+        "name": "layout", 
+        "src": "circuit/images/layout.png"
+      },
+      { 
+        "name": "schematic", 
+        "src": "circuit/images/schematic.png"
+      },
+      { 
+        "name": "preview", 
+        "src": "circuit/images/preview.png"
+      }
+    ]
+  },
+  {
+    "author": "Quentin Bolsee",
+    "name": "distance-VL53L1-xiao",
+    "software": "software/distance.js",
+    "firmware": "firmware/distance-xiao/distance-xiao.ino",
+    "images": [
+      { 
+        "name": "layout", 
+        "src": "circuit/images/layout.png"
+      },
+      { 
+        "name": "schematic", 
+        "src": "circuit/images/schematic.png"
+      },
+      { 
+        "name": "preview", 
+        "src": "circuit/images/preview.png"
+      }
+    ]
+  },
+  {
+    "author": "Jake Read",
+    "name": "mosfet-xiao",
+    "firmware": "firmware/mosfet-thing/mosfet-thing.ino",
+    "software": "software/mosfet.ts",
+    "images": [
+      { 
+        "name": "layout", 
+        "src": "circuit/images/layout.jpg"
+      },
+      { 
+        "name": "schematic", 
+        "src": "circuit/images/schematic.jpg"
+      }
+    ]
+  },
+  {
+    "author": "Quentin Bolsee",
+    "name": "potentiometer-xiao",
+    "firmware": "firmware/potentiometer-xiao/potentiometer-xiao.ino",
+    "software": "software/potentiometer.js",
+    "images": [
+      { 
+        "name": "layout", 
+        "src": "circuit/images/layout.png"
+      },
+      { 
+        "name": "schematic", 
+        "src": "circuit/images/schematic.png"
+      }
+    ]
+  },
+  {
+    "author": "Quentin Bolsee",
+    "name": "servo-xiao",
+    "firmware": "firmware/servo-thing/servo-thing.ino",
+    "software": "software/servo.ts",
+    "images": [
+      { 
+        "name": "layout", 
+        "src": "circuit/images/layout.png"
+      },
+      { 
+        "name": "schematic", 
+        "src": "circuit/images/schematic.png"
+      }
+    ]
+  },
+  {
+    "author": "Jake Read",
+    "name": "stepper-hbridge-xiao",
+    "software": "software/stepper.ts",
+    "firmware": "firmware/simple-stepper/simple-stepper.ino",
+    "images": [
+      { 
+        "name": "layout", 
+        "src": "circuit/images/layout.jpg"
+      },
+      { 
+        "name": "schematic", 
+        "src": "circuit/images/schematic.jpg"
+      },
+      { 
+        "name": "fabbed", 
+        "src": "circuit/images/fabbed.jpg"
+      }
+    ]
+  }
+]
