@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
-class ImageAbstractController extends Controller
+class HaikuFromImageController extends Controller
 {
     public function generate(Request $request)
     {
@@ -32,16 +32,13 @@ class ImageAbstractController extends Controller
                         ]
                     ],
                     [
-                        'text' => <<<EOT
-この画像の印象を抽象化して、心象風景のような幾何学模様に変換してください。
-以下の条件でSVGコードを生成してください：
+                        'text' => <<<PROMPT
+You are a skilled haiku poet. Based on the contents and mood of the image provided, generate a 3-line haiku in English.
 
-- 幾何図形（例：円、三角形、直線）のみ使用
-- 背景なし、stroke-width: 1以上で描画
-- 色数は1〜3色
-- SVG全体のviewBoxは "0 0 500 500"
-- 出力は<svg>タグから始まり</svg>タグで終わるSVGコードとしてください。
-EOT
+- Follow 5-7-5 syllable pattern.
+- Keep it minimal, emotional, and nature-inspired if appropriate.
+- Output only the haiku.
+PROMPT
                     ]
                 ]
             ]]
@@ -55,14 +52,14 @@ EOT
         $result = $response->json();
         $text = $result['candidates'][0]['content']['parts'][0]['text'] ?? '';
 
-        $path = Storage::disk('s3')->putFile('svgs', $text);
-        $url = config('filesystems.disks.s3.url') . '/' . $path;
+//        $path = Storage::disk('s3')->putFile('haiku-image', $text);
+//        $url = config('filesystems.disks.s3.url') . '/' . $path;
 
         return response()->json([
             'message' => 'Upload successful',
             'svg' => $text,
-            'path' => $path,
-            'url' => $url,
+//            'path' => $path,
+//            'url' => $url,
         ]);
     }
 }
