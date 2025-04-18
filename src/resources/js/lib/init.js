@@ -70,11 +70,11 @@ export function init(state) {
     }
   });
 
-    async function goTo(x,y){
-        console.log(`Moving to (${x}, ${y})`);
-        // await machine.absolute([1*(x+y),1*(x-y)]); // The reason why "-1" is multiplied may be due to the wiring and origin position.
-        await machine.absolute([1*(x+y)]);
-    }
+  async function goTo(x,y){
+      console.log(`Moving to (${x}, ${y})`);
+      // await machine.absolute([1*(x+y),1*(x-y)]); // The reason why "-1" is multiplied may be due to the wiring and origin position.
+      await machine.absolute([1*(x+y)]);
+  }
 
   // window.addEventListener("keydown", (e) => {
   //   const code = global_state.codemirror.state.doc.toString();
@@ -87,11 +87,11 @@ export function init(state) {
   //   }
   // })
 
-  const cache = window.localStorage.getItem("cache");
-  const cm = global_state.codemirror;
-  cm.dispatch({
-    changes: { from: 0, insert: cache ?? "" }
-  });
+  // const cache = window.localStorage.getItem("cache");
+  // const cm = global_state.codemirror;
+  // cm.dispatch({
+  //   changes: { from: 0, insert: cache ?? "" }
+  // });
 
   const search = window.location.search;
   // we can set the file via url args
@@ -99,39 +99,40 @@ export function init(state) {
   // also panel selection
   let panelChoice = new URLSearchParams(search).get("panel");
   if(!panelChoice){
-    panelChoice = "view"
+    panelChoice = "none"
   }
   // and panel width
   let panelWidth = new URLSearchParams(search).get("panelWidth");
   if(!panelWidth){
     panelWidth = "2"
   }
-
-  const isProduction = window.location.hostname === "modular-things.com";
-  if (file) {
-    let file_url = file;
-    if (!file.startsWith("http"))
-      file_url = isProduction
-        ? `https://raw.githubusercontent.com/modular-things/modular-things/main/examples/${file}`
-        : `examples/${file}`;
-
-    fetch(file_url).then(async (res) => {
-      const text = await res.text();
-
-      const currentProg = cm.state.doc.toString();
-
-      cm.dispatch({
-        changes: { from: 0, to: currentProg.length, insert: text }
-      });
-
-      global_state.panelType.value = panelChoice;
-      document.documentElement.style.setProperty("--cm-width", `${panelWidth}%`);
-      document.querySelector(".run-button").click();
-
-      // TODO: weird bug with this
-      setTimeout(() => {
-        document.querySelector(".run-button").click();
-      }, 500);
-    });
-  }
+  global_state.panelType.value = panelChoice;
+  document.documentElement.style.setProperty("--cm-width", `${panelWidth}%`);
+  // const isProduction = window.location.hostname === "modular-things.com";
+  // if (file) {
+  //   let file_url = file;
+  //   if (!file.startsWith("http"))
+  //     file_url = isProduction
+  //       ? `https://raw.githubusercontent.com/modular-things/modular-things/main/examples/${file}`
+  //       : `examples/${file}`;
+  //
+  //   fetch(file_url).then(async (res) => {
+  //     const text = await res.text();
+  //
+  //     const currentProg = cm.state.doc.toString();
+  //
+  //     cm.dispatch({
+  //       changes: { from: 0, to: currentProg.length, insert: text }
+  //     });
+  //
+  //     global_state.panelType.value = panelChoice;
+  //     document.documentElement.style.setProperty("--cm-width", `${panelWidth}%`);
+  //     document.querySelector(".run-button").click();
+  //
+  //     // TODO: weird bug with this
+  //     setTimeout(() => {
+  //       document.querySelector(".run-button").click();
+  //     }, 500);
+  //   });
+  // }
 }

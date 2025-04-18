@@ -1,59 +1,41 @@
 <template>
-    <div>
-        <div @click="handleClick('devices')">
+    <div class="side-menu">
+        <div
+            :class="['menu-item', panelType === 'devices' ? 'active' : '']"
+            @click="handleClick('devices')"
+        >
             Devices
         </div>
-<!--        <div @click="handleClick('view')">-->
-<!--            View-->
-<!--        </div>-->
-<!--        <div @click="handleClick('help')">-->
-<!--            Help-->
-<!--        </div>-->
     </div>
 </template>
 
 <script setup>
-// import styles from '../styles/SideMenu.module.css'
 import { global_state } from '../lib/global_state'
 import { computed } from 'vue'
 
-// function getStyle(name) {
-//     return [
-//         styles['menu-item'],
-//         global_state.panelType.value === name
-//             ? styles['selected-menu-item']
-//             : ''
-//     ].join(' ')
-// }
-
-function openPanel() {
-    if (global_state.panelType.value === 'none') {
-        document.documentElement.style.setProperty('--cm-width', '70%')
-    }
-}
-
-function closePanel() {
-    if (global_state.panelType.value === 'none') {
-        document.documentElement.style.setProperty('--cm-width', '100%')
-    }
-}
-
-function togglePanel(name) {
-    global_state.panelType.value =
-        global_state.panelType.value === name ? 'none' : name
-}
+const panelType = computed(() => global_state.panelType.value)
 
 function handleClick(name) {
-    openPanel()
-    togglePanel(name)
-    closePanel()
+    global_state.panelType.value =
+        global_state.panelType.value === name ? 'none' : name
 }
 </script>
 
 <style scoped>
-/* 任意の補足スタイル */
-.prevent-select {
-    user-select: none;
+.side-menu {
+    width: 100px;
+    background: #fafafa;
+    border-right: 1px solid #ddd;
+    padding: 1rem;
+}
+.menu-item {
     cursor: pointer;
+    padding: 0.5rem 0;
+}
+.active {
+    font-weight: bold;
+    color: #007acc;
 }
 </style>
+
+

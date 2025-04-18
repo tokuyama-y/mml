@@ -83,33 +83,6 @@ const handleFile = (file) => {
     }
     reader.readAsDataURL(file)
 }
-
-async function scanDevices() {
-    if (!("serial" in navigator)) {
-        alert("Web Serial API not supported");
-        return;
-    }
-    const ports = await navigator.serial.getPorts();
-    console.log("Connected ports:", ports);
-}
-
-async function pairDevice() {
-    const port = await navigator.serial.requestPort();
-    await port.open({ baudRate: 115200 });
-
-    // ポートをOSAPに接続（モジュール内に適切な初期化が必要）
-    const osap = new OSAPClient(port);
-    await osap.init();
-}
-
-async function disconnectAll(devices) {
-    for (const device of devices) {
-        if (device.port && device.port.readable) {
-            await device.port.close();
-        }
-    }
-    devices.length = 0; // 全デバイス削除
-}
 </script>
 <style>
 .fade-enter-active,
