@@ -26,7 +26,7 @@ export default defineConfig({
         },
     },
     server: {
-        host: '0.0.0.0',
+        host: 'machinical-memory-landscapes.cloud',
         port: 5173,
     },
 })

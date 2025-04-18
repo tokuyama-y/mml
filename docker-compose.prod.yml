@@ -5,6 +5,7 @@ services:
     image: nginx:alpine
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./src:/var/www/html
@@ -25,14 +26,16 @@ services:
       - mml-network
 
   node:
-      image: node:18
-      container_name: node
-      working_dir: /var/www/html
-      volumes:
-        - ./src:/var/www/html
-      networks:
-        - mml-network
-      command: sh -c "npm install && npm run build"
+    image: node:18
+    container_name: node
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - mml-network
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev"
 
   db:
     image: mysql:8.0

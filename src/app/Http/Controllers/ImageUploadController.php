@@ -14,12 +14,12 @@ class ImageUploadController extends Controller
         ]);
 
         $path = Storage::disk('s3')->putFile('images', $request->file('image'));
-//        $url = config('filesystems.disks.s3.url') . '/' . $path;
+        $url = config('filesystems.disks.s3.url') . '/' . $path;
 
         return response()->json([
             'message' => 'Upload successful',
-//            'path' => $path,
-//            'url' => $url,
+            'path' => $path,
+            'url' => $url,
         ]);
     }
 }
