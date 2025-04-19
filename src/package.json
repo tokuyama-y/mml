@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build && mv public/build/.vite/manifest.json public/build/manifest.json"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4.1.3",
