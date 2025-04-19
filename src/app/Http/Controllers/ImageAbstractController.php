@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Google\Auth\Credentials\ServiceAccountCredentials;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -19,8 +20,22 @@ class ImageAbstractController extends Controller
         $base64 = base64_encode(file_get_contents($image->getRealPath()));
         $mime = $image->getMimeType();
 
+        $scopes = [
+            'https://www.googleapis.com/auth/generative-language.vision',
+            'https://www.googleapis.com/auth/generative-language.tuned',
+            'https://www.googleapis.com/auth/cloud-platform',
+        ];
+
+        // OAuth 2.0 トークンを取得
+        $credentials = new ServiceAccountCredentials(
+            $scopes,
+            env('GOOGLE_APPLICATION_CREDENTIALS')
+        );
+        $accessToken = $credentials->fetchAuthToken()['access_token'];
+
         // Gemini API へ POST
         $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $accessToken,
             'Content-Type' => 'application/json',
         ])->post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . env('GEMINI_API_KEY'), [
             'contents' => [[
