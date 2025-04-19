@@ -140,9 +140,6 @@ EOT
         return response()->json([
             'message' => 'Upload successful',
             'haiku' => $text,
-//            'path' => $path,
-//            'url' => $url,
         ]);
     }
-
 }
