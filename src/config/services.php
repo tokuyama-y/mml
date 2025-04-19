@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'google' => [
+        'credentials_path' => env('GOOGLE_APPLICATION_CREDENTIALS'),
+        'gemini_api_key' => env('GEMINI_API_KEY'),
+    ],
+
 ];

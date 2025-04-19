@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Google\Auth\Credentials\ServiceAccountCredentials;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ImageAbstractController extends Controller
@@ -21,17 +22,21 @@ class ImageAbstractController extends Controller
         $mime = $image->getMimeType();
 
         $scopes = [
-            'https://www.googleapis.com/auth/generative-language.vision',
-            'https://www.googleapis.com/auth/generative-language.tuned',
-            'https://www.googleapis.com/auth/cloud-platform',
+            'https://www.googleapis.com/auth/generative-language'
         ];
 
         // OAuth 2.0 トークンを取得
         $credentials = new ServiceAccountCredentials(
             $scopes,
-            env('GOOGLE_APPLICATION_CREDENTIALS')
+            config('services.google.credentials_path')
         );
-        $accessToken = $credentials->fetchAuthToken()['access_token'];
+        $tokenData = $credentials->fetchAuthToken();
+
+        if (!is_array($tokenData) || !isset($tokenData['access_token'])) {
+            throw new \Exception("アクセストークンの取得に失敗しました: ");
+        }
+
+        $accessToken = $tokenData['access_token'];
 
         // Gemini API へ POST
         $response = Http::withHeaders([
@@ -63,14 +68,20 @@ EOT
         ]);
 
         if (!$response->ok()) {
-            return response()->json(['error' => 'Gemini API error', 'details' => $response->body()], 500);
+//            return response()->json(['error' => 'Gemini API error', 'details' => $response->body()], 500);
+            return throw new \Exception("Gemini API error");
         }
 
         // Gemini応答からSVG部分を取り出し
         $result = $response->json();
         $text = $result['candidates'][0]['content']['parts'][0]['text'] ?? '';
 
-        $path = Storage::disk('s3')->putFile('svgs', $text);
+        $filename = 'svg-' . now()->timestamp . '.svg';
+//        $path = Storage::disk('s3')->putFile('svgs/' . $filename, $text);
+
+
+        $path = 'svgs/' . $filename;
+        Storage::disk('s3')->put($path, $text);
         $url = config('filesystems.disks.s3.url') . '/' . $path;
 
         return response()->json([
