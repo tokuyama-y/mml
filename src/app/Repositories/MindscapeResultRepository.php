@@ -41,4 +41,9 @@ class MindscapeResultRepository
                               ->orderByDesc('updated_at')
                               ->first();
     }
+
+    public function getAll(): \Illuminate\Support\Collection
+    {
+        return MindscapeResult::orderBy('updated_at', 'desc')->get();
+    }
 }

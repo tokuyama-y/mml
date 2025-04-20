@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HaikuFromImageController;
 use App\Http\Controllers\ImageAbstractController;
+use App\Http\Controllers\MindscapeResultController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ImageUploadController;
 
@@ -20,8 +21,11 @@ use App\Http\Controllers\ImageUploadController;
 //    return $request->user();
 //});
 
-Route::post('/upload-image', [ImageUploadController::class, 'upload']);
+//Route::post('/upload-image', [ImageUploadController::class, 'upload']);
 
 Route::post('/abstract-image', [ImageAbstractController::class, 'generate']);
 
 Route::post('/image-haiku', [HaikuFromImageController::class, 'generate']);
+Route::post('/upload-image', [HaikuFromImageController::class, 'generate']);
+
+Route::get('/mindscape-results', [MindscapeResultController::class, 'index']);

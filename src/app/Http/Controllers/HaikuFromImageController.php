@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\MindscapeResultRepository;
 use GeminiAPI\Enums\HarmBlockThreshold;
 use GeminiAPI\Enums\HarmCategory;
 use GeminiAPI\GenerationConfig;
@@ -18,8 +19,12 @@ use GeminiAPI\Resources\Parts\TextPart;
 
 class HaikuFromImageController extends Controller
 {
-    protected $client;
-    protected $model = "gemini-1.5-pro-latest"; // 使用するモデル
+    protected $MindscapeResultRepository;
+
+    public function __construct(MindscapeResultRepository $MindscapeResult)
+    {
+        $this->MindscapeResultRepository = $MindscapeResult;
+    }
 
     public function generate(Request $request)
     {
@@ -136,6 +141,10 @@ EOT
         // Gemini応答から俳句部分を取り出し
         $result = $response->json();
         $text = $result['candidates'][0]['content']['parts'][0]['text'] ?? '';
+
+        $MindscapeResult = $this->MindscapeResultRepository->findLatestWithoutHaiku();
+        $MindscapeResult->haiku = $text;
+        $MindscapeResult->save();
 
         return response()->json([
             'message' => 'Upload successful',
