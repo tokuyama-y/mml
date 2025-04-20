@@ -45,10 +45,22 @@
 <script setup>
 import { ref } from 'vue'
 import { ArrowUpTrayIcon } from '@heroicons/vue/24/outline'
+import { global_state } from '../lib/global_state'
+import createSynchronizer from "../lib/synchronizer";
+import Time from "../lib/osapjs/utils/time";
+import axios from 'axios'
 
+const scale = 5 /8;
 const fileInput = ref(null)
 const isDragging = ref(false)
 const previewUrl = ref(null)
+// const apiResponse = ref<any>(null)
+
+let machine;
+let motorA;
+let motorB;
+let motorC;
+let coordinates;
 
 const triggerFileInput = () => {
     fileInput.value.click()
@@ -71,17 +83,93 @@ const onFileChange = (e) => {
     handleFile(e.target.files[0])
 }
 
-const handleFile = (file) => {
+const handleFile = async (file) => {
     if (!file || !file.type.startsWith('image/')) {
         alert('Please select an image file.')
         return
     }
 
+    // プレビュー表示用
     const reader = new FileReader()
     reader.onload = () => {
         previewUrl.value = reader.result
     }
     reader.readAsDataURL(file)
+
+    // 画像アップロード処理
+    const formData = new FormData()
+    formData.append('image', file)
+
+    try {
+        const response = await axios.post('/api/abstract-image', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+
+        console.log('API Response:', response.data)
+        coordinates = response.data['coordinates']
+    } catch (error) {
+        console.error('❌ API Error:', error)
+        return
+    }
+    console.log('coordinates:', coordinates)
+    await runKaresansui(coordinates)
+}
+
+const initMachine = async () => {
+    console.log(`initMachine`);
+    motorA = global_state.things.value['motorA']
+    motorB = global_state.things.value['motorB']
+    motorC = global_state.things.value['motorC']
+    machine = createSynchronizer([motorA, motorB]);
+
+    await motorA.setCurrent(1);
+    motorA.setStepsPerUnit(5);
+    motorA.setAccel(20);
+
+    await motorB.setCurrent(1);
+    motorB.setStepsPerUnit(5);
+    motorB.setAccel(20);
+
+    // set present position as (X0,Y0)
+    await machine.setPosition([0, 0]);
+
+    await motorC.setCurrent(0.8);
+    motorC.setStepsPerUnit(5);
+}
+
+const goTo = async (x, y) => {
+    console.log(`Moving to (${x}, ${y})`);
+    await machine.absolute([scale * (x + y), scale * (x - y)]);
+}
+
+const goToHome = async () => {
+    console.log(`goToHome`);
+    while(await motorB.getLimitState()){ // Limit switch at X- as Normally-Open
+        motorA.velocity(-10);//move motorA CW -> CCW
+        motorB.velocity(-10); //move motorB CW -> CCW
+    }
+    while(await motorA.getLimitState()){ //  Limit switch at Y- as Normally-Open
+        motorA.velocity(-10); //positive value means CW -> CCW
+        motorB.velocity(10); //negative value means CCW -> CW
+    }
+    motorA.velocity(0);
+    motorB.velocity(0);
+    machine.setPosition([0, 0]);
+    await Time.delay(1000);
+    await goTo(10, 10);
+    await Time.delay(1000);
+}
+
+const runKaresansui = async (coordinates) => {
+    console.log(`runKaresansui`);
+    await initMachine()
+    await goToHome()
+    for (let i = 1; i < coordinates.length; i++){
+        await goTo(coordinates[i][0], coordinates[i][1]);
+        await Time.delay(200);
+    }
 }
 </script>
 <style>

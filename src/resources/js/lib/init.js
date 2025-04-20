@@ -4,7 +4,6 @@ import { createListener } from "./events/listen.js";
 import { addDividerDrag } from "./events/addDividerDrag";
 import { download } from "./download";
 import { authorizePort, initSerial, disconnectAll } from "./modularThingClient";
-import createSynchronizer from "./synchronizer";
 
 export function init(state) {
   if (!navigator.serial) {
@@ -55,26 +54,6 @@ export function init(state) {
     // }
     // setThingsState({});
   });
-  let machine = null;
-  bodyListener("click", ".test-button-trigger", async () => {
-    const motorA = global_state.things.value['motorA']
-    machine = createSynchronizer([motorA]);
-    motorA.setCurrent(1);
-    motorA.setStepsPerUnit(5);
-    motorA.setAccel(20);
-    machine.setPosition([0]);// set present position as (X0,Y0)
-    machine.setPosition([0, 0]);
-    let i;
-    for ( i = 0; i<10; i++){
-      goTo(i,0 );
-    }
-  });
-
-  async function goTo(x,y){
-      console.log(`Moving to (${x}, ${y})`);
-      // await machine.absolute([1*(x+y),1*(x-y)]); // The reason why "-1" is multiplied may be due to the wiring and origin position.
-      await machine.absolute([1*(x+y)]);
-  }
 
   // window.addEventListener("keydown", (e) => {
   //   const code = global_state.codemirror.state.doc.toString();
@@ -136,3 +115,4 @@ export function init(state) {
   //   });
   // }
 }
+

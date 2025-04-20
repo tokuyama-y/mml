@@ -16,9 +16,9 @@
                             <div class="device-button-container">
                                 <button class="device-button disconnect-button-trigger">disconnect all</button>
                             </div>
-                            <div class="device-button-container">
-                                <button class="device-button test-button-trigger">test</button>
-                            </div>
+<!--                            <div class="device-button-container">-->
+<!--                                <button class="device-button test-button-trigger">test</button>-->
+<!--                            </div>-->
                         </div>
 <!--                        <pre>{{ global_state.things.value }}</pre>-->
 <!--                        <pre>{{ things }}</pre>-->
