@@ -61,6 +61,36 @@ let motorA;
 let motorB;
 let motorC;
 let coordinates;
+// const resetCoordinates = [
+//     [0, 0], [226, 0],
+//     [226, 20], [0, 20],
+//     [0, 40], [226, 40],
+//     [226, 60], [0, 60],
+//     [0, 80], [226, 80],
+//     [226, 100], [0, 100],
+//     [0, 120], [226, 120],
+//     [226, 140], [0, 140],
+//     [0, 160], [226, 160],
+//     [226, 180], [0, 180],
+//     [0, 200], [226, 200],
+//     [226, 220], [0, 220],
+//     [0, 240], [226, 240]
+// ];
+
+const resetCoordinates = [
+    [0, 0], [216, 0], [216, 230], [10, 230],
+    [10, 10], [206, 10], [206, 220], [20, 220],
+    [20, 20], [196, 20], [196, 210], [30, 210],
+    [30, 30], [186, 30], [186, 200], [40, 200],
+    [40, 40], [176, 40], [176, 190], [50, 190],
+    [50, 50], [166, 50], [166, 180], [60, 180],
+    [60, 60], [156, 60], [156, 170], [70, 170],
+    [70, 70], [146, 70], [146, 160], [80, 160],
+    [80, 80], [136, 80], [136, 150], [90, 150],
+    [90, 90], [126, 90], [126, 140], [100, 140],
+    [100, 100], [116, 100], [116, 130], [110, 130],
+    [110, 110]
+];
 
 const triggerFileInput = () => {
     fileInput.value.click()
@@ -166,8 +196,22 @@ const runKaresansui = async (coordinates) => {
     console.log(`runKaresansui`);
     await initMachine()
     await goToHome()
+    motorC.relative(-15);
     for (let i = 1; i < coordinates.length; i++){
         await goTo(coordinates[i][0], coordinates[i][1]);
+        await Time.delay(200);
+    }
+    // await runReset()
+    motorC.relative(15);
+    await goToHome()
+}
+
+const runReset = async () => {
+    console.log(`runReset`);
+    motorA.velocity(1)
+    motorB.velocity(1)
+    for (let i = 1; i < resetCoordinates.length; i++){
+        await goTo(resetCoordinates[i][0], resetCoordinates[i][1]);
         await Time.delay(200);
     }
 }
