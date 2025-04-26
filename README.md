@@ -12,27 +12,27 @@ Follow the steps below to set up your local environment:
    git clone git@github.com:tokuyama-y/mml.git
    ```
 
-2. **Download Docker Desktop:**
+2. **Place configuration files:**
+
+   Obtain `.env` and `google-service-account.json` from the "kannai" team, and place them in the following directories:
+   - `.env` → root directory of the project
+   - `google-service-account.json` → `src/storage/app/google-service-account.json`
+
+3. **Download Docker Desktop:**
 
    Download and install Docker Desktop from the [official website](https://www.docker.com/).
 
-3. **Build and start Docker containers:**
+4. **Build and start Docker containers:**
 
    ```bash
    docker-compose -f docker-compose.local.yml up -d --build
    ```
 
-4. **Inspect the Docker network:**
+5. **Inspect the Docker network:**
 
    ```bash
    docker network inspect mml-network
    ```
-
-5. **Place configuration files:**
-
-   Obtain `.env` and `google-service-account.json` from the "kannai" team, and place them in the following directories:
-   - `.env` → root directory of the project
-   - `google-service-account.json` → `src/storage/app/google-service-account.json`
 
 6. **Run Laravel commands in the Docker container:**
 
