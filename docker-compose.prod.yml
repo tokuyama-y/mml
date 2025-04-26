@@ -37,26 +37,8 @@ services:
       - "5173:5173"
     command: sh -c "npm install && npm run build"
 
-  db:
-    image: mysql:8.0
-    container_name: mysql
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: mml
-      MYSQL_USER: mml_user
-      MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: root_pass
-    volumes:
-      - db-data:/var/lib/mysql
-    networks:
-      - mml-network
-    command: --default-authentication-plugin=mysql_native_password
-
 networks:
   mml-network:
     name: mml-network
     driver: bridge
 
-volumes:
-  db-data:

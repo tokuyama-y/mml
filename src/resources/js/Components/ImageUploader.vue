@@ -177,7 +177,7 @@ const goTo = async (x, y) => {
 const goToHome = async () => {
     console.log(`goToHome`);
     while(await motorB.getLimitState()){ // Limit switch at X- as Normally-Open
-        motorA.velocity(-10);//move motorA CW -> CCW
+        motorA.velocity(-10); //move motorA CW -> CCW
         motorB.velocity(-10); //move motorB CW -> CCW
     }
     while(await motorA.getLimitState()){ //  Limit switch at Y- as Normally-Open
