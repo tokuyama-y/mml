@@ -1,4 +1,6 @@
-
+# Project Background
+This project is a dedicated tool created for the machine ["RYOAN-JI XY 2025"](https://fabacademy.org/2025/labs/kannai/Machine_Building/) developed by the FabLab Kannai team as part of the group assignment for the Mechanical Design module of The Fab Academy 2025.
+We have deployed this project on AWS and made it publicly available at https://machinical-memory-landscapes.cloud/. <br>
 
 ## Local Environment Setup
 
