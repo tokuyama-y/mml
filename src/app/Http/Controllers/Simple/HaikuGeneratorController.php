@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Simple;
 
+use App\Http\Controllers\Controller;
 use App\Repositories\MindscapeResultRepository;
 use App\Services\GeminiHaikuService;
 use Illuminate\Http\Request;
 
-class HaikuFromImageController extends Controller
+class HaikuGeneratorController extends Controller
 {
     protected $MindscapeResultRepository;
     protected $GeminiHaikuService;
@@ -37,10 +38,6 @@ class HaikuFromImageController extends Controller
                 'details' => $e->getMessage(),
             ], 500);
         }
-
-        $MindscapeResult = $this->MindscapeResultRepository->findLatestWithoutHaiku();
-        $MindscapeResult->haiku = $haikuText;
-        $MindscapeResult->save();
 
         return response()->json([
             'message' => 'Upload successful',
