@@ -24,16 +24,16 @@ Follow the steps below to set up your local environment:
 
    Download and install Docker Desktop from the [official website](https://www.docker.com/).
 
-4. **Build and start Docker containers:**
-
-   ```bash
-   docker-compose -f docker-compose.local.yml up -d --build
-   ```
-
-5. **Inspect the Docker network:**
+4. **Inspect the Docker network:**
 
    ```bash
    docker network inspect mml-network
+   ```
+
+5. **Build and start Docker containers:**
+
+   ```bash
+   docker-compose -f docker-compose.local.yml up -d --build
    ```
 
 6. **Run Laravel commands in the Docker container:**
