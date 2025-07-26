@@ -92,8 +92,7 @@ services:
 
 networks:
   mml-network:
-    name: mml-network
-    driver: bridge
+    external: true
 
 volumes:
   db-data:
