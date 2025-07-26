@@ -27,7 +27,7 @@ Follow the steps below to set up your local environment:
 4. **Inspect the Docker network:**
 
    ```bash
-   docker network inspect mml-network
+   docker network create mml-network
    ```
 
 5. **Build and start Docker containers:**
